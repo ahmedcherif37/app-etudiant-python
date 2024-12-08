@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: web-app
+  name: web-app
+spec:
+  containers:
+  - image: ahmedcherif37/app-etudiant-python:1.0.0
+    name: web-app
+    ports:
+    - containerPort: 5000
+    resources: {}
+    env:
+    - name: MYSQL_HOST
+      value: "mysql"
+    - name: MYSQL_USER
+      value: "root"
+    - name: MYSQL_PASSWORD
+      value: "root"
+    - name: MYSQL_DATABASE
+      value: "school"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: web-app
+  name: web-app
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    run: web-app
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: mysql
+  name: mysql
+spec:
+  containers:
+  - image: mysql:8.0
+    name: mysql
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: "root"
+    - name: MYSQL_DATABASE
+      value: "school"
+    resources: {}
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: mysql-storage
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: mysql-storage
+    persistentVolumeClaim:
+      claimName: mysql-pvc
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: mysql
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    run: mysql
+status:
+  loadBalancer: {}
