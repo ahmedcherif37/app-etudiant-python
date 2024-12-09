@@ -17,6 +17,10 @@ spec:
       labels:
         app: mysql
     spec:
+      volumes:
+      - name: vol-claim
+        persistentVolumeClaim:
+          claimName: mysql-pvc
       containers:
       - image: mysql:8.0
         name: mysql
@@ -33,6 +37,9 @@ spec:
             configMapKeyRef:
               name: conf-app
               key: MYSQL_DATABASE
+        volumeMounts:
+         - name: vol-claim
+           mountPath: /var/lib/mysql
 
         resources: {}
 status: {}
