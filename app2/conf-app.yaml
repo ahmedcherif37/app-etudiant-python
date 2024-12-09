@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  MYSQL_DATABASE: school
+  MYSQL_HOST: mysql
+  MYSQL_USER: root
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: conf-app
