@@ -23,4 +23,25 @@ spec:
         ports:
         - containerPort: 5000
         resources: {}
+        env:
+        - name: MYSQL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: conf-app
+              key:  MYSQL_HOST
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: conf-app
+              key:  MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name:  secret-mysql
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: conf-app
+              key: MYSQL_DATABASE
 status: {}
