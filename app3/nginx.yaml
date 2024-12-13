@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx
+  namespace: dev3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx:1.16
+        name: nginx
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          x=$(nginx -v 2>&1 | grep -o '[0-9.]*');
+          echo "<html><head><title>Bienvenue sur Nginx</title></head><body><h1>Bienvenue sur Nginx</h1><p>Version de l'image: $x </p></body></html>" > /usr/share/nginx/html/index.html;
+          nginx -g 'daemon off;'
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx
+  namespace: dev3
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
+status:
+  loadBalancer: {}
