@@ -19,7 +19,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx:1.17
+      - image: nginx:1.16
         name: nginx
         command: ["/bin/sh", "-c"]
         args:
